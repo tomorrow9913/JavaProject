@@ -18,13 +18,13 @@ def add_menu(db: Session, name: str, category: str, price: float, thumbnail_url:
 
 # Read
 def get_menu(db: Session, menu_name: str):
-    product = db.query(Menu).filter(Menu.name == menu_name).first()
-    if product is None:
+    menu = db.query(Menu).filter(Menu.name == menu_name).first()
+    if menu is None:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Menu not found!"
         )
-    return product
+    return menu
 
 
 def get_category_list(db: Session):
@@ -34,26 +34,26 @@ def get_category_list(db: Session):
 
 
 def get_menu_list(db: Session, page: int, limit: int, category: str = None):
-    product = db.query(Menu)
+    menu = db.query(Menu)
 
     if category is not None:
-        product.filter(Menu.category == category)
+        menu.filter(Menu.category == category)
 
-    cnt = product.count()
+    cnt = menu.count()
 
-    product = product.limit(limit).offset(page * limit).all()
-    product = [p.__dict__ for p in product]
+    menu = menu.limit(limit).offset(page * limit).all()
+    menu = [p.__dict__ for p in menu]
 
     return {
         "cnt": cnt,
         "page": page,
         "limit": limit,
-        "menu": product
+        "menu": menu
     }
 
 
 # Update
-def update_product(db: Session, menu_name:str, name: str, category: str, price: int, thumbnail_url: str, suggestion: int):
+def update_menu(db: Session, menu_name:str, name: str, category: str, price: int, thumbnail_url: str, suggestion: int):
     menu = db.query(Menu).filter(Menu.name == menu_name).first()
 
     if menu is None:

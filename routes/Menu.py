@@ -60,7 +60,7 @@ async def update_product(
             detail="Unauthorized!"
         )
 
-    return MenuCRUD.update_product(db, menu_name, **menu.__dict__)
+    return MenuCRUD.update_menu(db, menu_name, **menu.__dict__)
 
 
 # Delete
