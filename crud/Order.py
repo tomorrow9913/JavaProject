@@ -1,5 +1,5 @@
 import traceback
-from datetime import datetime
+from datetime import datetime, time
 
 from fastapi import HTTPException
 from sqlalchemy.orm import Session
@@ -84,8 +84,22 @@ def get_price(db: Session, menu_list: OrderReq) -> int:
     return price
 
 
+def get_sales(db: Session, year: int, month: int, day: int):
+    search_time = datetime(year, month, day)
+    data = (db.query(OrderMenu)
+            .join(Order, Order.id == OrderMenu.order_id)
+            .filter(Order.progress >= 0)
+            .filter(
+            Order.order_time >= datetime.combine(search_time, time.min),
+            Order.order_time <= datetime.combine(search_time, time.max))
+            .all())
+
+    data = [{"name": o.order_menu, "quantity": o.order_cnt} for o in data]
+    return get_price(db, OrderReq(order_list=data))
+
+
 def order_menu_list(db: Session, order_id: int):
-    return db.query(OrderMenu).filter(OrderMenu.order_id == order_id).all()
+    return db.query(OrderMenu).filter(Order.order_id == order_id).all()
 
 
 def get_order_list(db: Session, page: int, limit: int):
