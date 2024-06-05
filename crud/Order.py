@@ -28,7 +28,7 @@ def add_order(db: Session, orders: list[OrderDto]):
                 continue
 
             new_order = OrderMenu(
-                order_id=order_info["id"],
+                order_id=order_info.id,
                 order_menu=order.name,
                 order_cnt=order.quantity
             )
@@ -42,12 +42,13 @@ def add_order(db: Session, orders: list[OrderDto]):
                 "progress": order_info.progress
             },
             "order_list": orders,
-            "total_price": get_price(db, orders)
-        }
+            "total_price": get_price(db, OrderReq(order_list=orders))
+    }
     except Exception as e:
+        print(traceback.format_exc())
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
-            detail=f"Error: insert order failed!"
+            detail=f"Error: insert order failed! {e}"
         )
 
 
