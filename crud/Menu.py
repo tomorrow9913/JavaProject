@@ -37,7 +37,7 @@ def get_menu_list(db: Session, page: int, limit: int, category: str = None):
     menu = db.query(Menu)
 
     if category is not None:
-        menu.filter(Menu.category == category)
+        menu = menu.filter(Menu.category == category)
 
     cnt = menu.count()
 
@@ -53,7 +53,7 @@ def get_menu_list(db: Session, page: int, limit: int, category: str = None):
 
 
 # Update
-def update_menu(db: Session, menu_name:str, name: str, category: str, price: int, thumbnail_url: str, suggestion: int):
+def update_menu(db: Session, menu_name: str, name: str, category: str, price: int, thumbnail_url: str, suggestion: int):
     menu = db.query(Menu).filter(Menu.name == menu_name).first()
 
     if menu is None:
