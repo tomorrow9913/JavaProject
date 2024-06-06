@@ -31,7 +31,7 @@ async def create_new_order(
 # Read
 @router.get("/sales")
 def get_sales(date: str, db: Session = Depends(get_db)):
-    y, m, d = map(int, date.split('-'))
+    y, m, d = map(int, date.split('.'))
     return OrderCRUD.get_sales(db, y, m, d)
 
 
